@@ -1,4 +1,3 @@
-// Sample static products — these will be replaced by CMS later
 const products = [
   {
     name: "Chocolate Fudge Cake",
@@ -67,28 +66,31 @@ products.forEach(product => {
   container.appendChild(card);
 });
 
-// Auto-scroll logic
-let scrollStep = 1.25; // 1.25x faster than before
+// Auto-scroll setup
+let scrollStep = 1.25;
+let direction = -1; // start right-to-left
 let isUserScrolling = false;
 let autoScrollPaused = false;
 let scrollInterval;
 
 function startAutoScroll() {
-  scrollInterval = setInterval(autoScrollCarousel, 20); // Faster interval
+  scrollInterval = setInterval(autoScrollCarousel, 20);
 }
 
 function autoScrollCarousel() {
   if (!container || isUserScrolling || autoScrollPaused) return;
 
-  container.scrollLeft += scrollStep;
+  container.scrollLeft += scrollStep * direction;
 
-  // If at the end, jump back to start for infinite loop
-  if (container.scrollLeft + container.clientWidth >= container.scrollWidth - 2) {
-    container.scrollLeft = 0;
+  // If reached either end, reverse direction
+  if (container.scrollLeft + container.clientWidth >= container.scrollWidth - 1) {
+    direction = -1; // go left
+  } else if (container.scrollLeft <= 0) {
+    direction = 1; // go right
   }
 }
 
-// Pause/resume on manual drag
+// Pause/resume on drag/touch
 container.addEventListener("mousedown", () => {
   isUserScrolling = true;
   pauseAutoScroll();
